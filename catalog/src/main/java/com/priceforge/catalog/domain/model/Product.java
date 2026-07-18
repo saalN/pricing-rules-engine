@@ -1,6 +1,7 @@
 package com.priceforge.catalog.domain.model;
 
 import com.priceforge.catalog.domain.exception.InvalidBasePriceException;
+import com.priceforge.catalog.domain.exception.ProductNotActiveException;
 import com.priceforge.sharedkernel.Money;
 import com.priceforge.sharedkernel.ProductId;
 import java.time.Instant;
@@ -74,6 +75,34 @@ public final class Product {
         if (basePrice.isNegative() || basePrice.isZero()) {
             throw new InvalidBasePriceException(
                 "Base price must be positive, but was " + basePrice.amount());
+        }
+    }
+
+    /**
+     * UC-02: changing the base price does not touch existing pricing rules — it only takes
+     * effect on the next price calculation.
+     */
+    public void changeBasePrice(Money newBasePrice) {
+        requireActive();
+        requirePositive(newBasePrice);
+        this.basePrice = newBasePrice;
+    }
+
+    /** UC-03: pricing rules tied to this product are not deleted, they simply stop applying. */
+    public void deactivate() {
+        requireActive();
+        this.status = ProductStatus.INACTIVE;
+    }
+
+    /** UC-04: a product always belongs to exactly one category. */
+    public void changeCategory(String newCategory) {
+        Objects.requireNonNull(newCategory, "newCategory must not be null");
+        this.category = newCategory;
+    }
+
+    private void requireActive() {
+        if (status != ProductStatus.ACTIVE) {
+            throw new ProductNotActiveException(id);
         }
     }
 

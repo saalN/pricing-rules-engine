@@ -4,6 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import com.priceforge.catalog.domain.exception.InvalidBasePriceException;
+import com.priceforge.catalog.domain.exception.ProductNotActiveException;
 import com.priceforge.sharedkernel.Money;
 import com.priceforge.sharedkernel.ProductId;
 import java.math.BigDecimal;
@@ -12,6 +13,12 @@ import java.util.Map;
 import org.junit.jupiter.api.Test;
 
 class ProductTest {
+
+    private static Product activeProduct() {
+        return Product.create(
+            ProductId.newId(), "SKU-1", "Widget", "A widget",
+            Money.of(BigDecimal.TEN, "EUR"), "URBAN", Map.of(), Instant.now());
+    }
 
     @Test
     void createsAProductWithActiveStatusAndAPositiveBasePrice() {
@@ -45,5 +52,49 @@ class ProductTest {
                 ProductId.newId(), "SKU-1", "Widget", "A widget",
                 Money.of(BigDecimal.valueOf(-1), "EUR"), "URBAN", Map.of(), Instant.now()))
             .isInstanceOf(InvalidBasePriceException.class);
+    }
+
+    @Test
+    void changesTheBasePriceWithoutAffectingOtherFields() {
+        Product product = activeProduct();
+
+        product.changeBasePrice(Money.of(BigDecimal.valueOf(20), "EUR"));
+
+        assertThat(product.basePrice()).isEqualTo(Money.of(BigDecimal.valueOf(20), "EUR"));
+    }
+
+    @Test
+    void rejectsChangingTheBasePriceOfAnInactiveProduct() {
+        Product product = activeProduct();
+        product.deactivate();
+
+        assertThatThrownBy(() -> product.changeBasePrice(Money.of(BigDecimal.valueOf(20), "EUR")))
+            .isInstanceOf(ProductNotActiveException.class);
+    }
+
+    @Test
+    void deactivatesAnActiveProduct() {
+        Product product = activeProduct();
+
+        product.deactivate();
+
+        assertThat(product.status()).isEqualTo(ProductStatus.INACTIVE);
+    }
+
+    @Test
+    void rejectsDeactivatingAnAlreadyInactiveProduct() {
+        Product product = activeProduct();
+        product.deactivate();
+
+        assertThatThrownBy(product::deactivate).isInstanceOf(ProductNotActiveException.class);
+    }
+
+    @Test
+    void changesTheCategory() {
+        Product product = activeProduct();
+
+        product.changeCategory("RURAL");
+
+        assertThat(product.category()).isEqualTo("RURAL");
     }
 }
