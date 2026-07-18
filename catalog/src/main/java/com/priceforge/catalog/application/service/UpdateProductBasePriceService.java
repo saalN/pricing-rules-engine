@@ -9,6 +9,7 @@ import com.priceforge.catalog.domain.model.Product;
 import com.priceforge.catalog.domain.model.ProductPriceBaseUpdated;
 import com.priceforge.sharedkernel.EventPublisher;
 import com.priceforge.sharedkernel.Money;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -20,7 +21,8 @@ public class UpdateProductBasePriceService implements UpdateProductBasePriceUseC
     private final EventPublisher eventPublisher;
 
     public UpdateProductBasePriceService(
-            ProductRepositoryPort productRepository, EventPublisher eventPublisher) {
+            ProductRepositoryPort productRepository,
+            @Qualifier("catalogEventPublisher") EventPublisher eventPublisher) {
         this.productRepository = productRepository;
         this.eventPublisher = eventPublisher;
     }

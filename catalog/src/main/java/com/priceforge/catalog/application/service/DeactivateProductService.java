@@ -8,6 +8,7 @@ import com.priceforge.catalog.domain.exception.ProductNotFoundException;
 import com.priceforge.catalog.domain.model.Product;
 import com.priceforge.catalog.domain.model.ProductDeactivated;
 import com.priceforge.sharedkernel.EventPublisher;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -18,7 +19,9 @@ public class DeactivateProductService implements DeactivateProductUseCase {
     private final ProductRepositoryPort productRepository;
     private final EventPublisher eventPublisher;
 
-    public DeactivateProductService(ProductRepositoryPort productRepository, EventPublisher eventPublisher) {
+    public DeactivateProductService(
+            ProductRepositoryPort productRepository,
+            @Qualifier("catalogEventPublisher") EventPublisher eventPublisher) {
         this.productRepository = productRepository;
         this.eventPublisher = eventPublisher;
     }

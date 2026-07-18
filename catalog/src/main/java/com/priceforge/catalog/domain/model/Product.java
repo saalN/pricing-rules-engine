@@ -71,6 +71,25 @@ public final class Product {
             createdAt);
     }
 
+    /**
+     * Rehydrates a Product from persisted state. Unlike {@link #create}, this does not re-run
+     * creation invariants (e.g. positive base price) — a persisted product was already validated
+     * when it was created, and status transitions enforce their own invariants going forward.
+     */
+    public static Product reconstitute(
+            ProductId id,
+            String sku,
+            String name,
+            String description,
+            Money basePrice,
+            String category,
+            Map<String, Object> customAttributes,
+            ProductStatus status,
+            Instant createdAt) {
+        return new Product(
+            id, sku, name, description, basePrice, category, Map.copyOf(customAttributes), status, createdAt);
+    }
+
     private static void requirePositive(Money basePrice) {
         if (basePrice.isNegative() || basePrice.isZero()) {
             throw new InvalidBasePriceException(

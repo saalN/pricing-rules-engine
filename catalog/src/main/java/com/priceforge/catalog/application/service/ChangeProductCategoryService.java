@@ -8,6 +8,7 @@ import com.priceforge.catalog.domain.exception.ProductNotFoundException;
 import com.priceforge.catalog.domain.model.Product;
 import com.priceforge.catalog.domain.model.ProductCategoryChanged;
 import com.priceforge.sharedkernel.EventPublisher;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -19,7 +20,8 @@ public class ChangeProductCategoryService implements ChangeProductCategoryUseCas
     private final EventPublisher eventPublisher;
 
     public ChangeProductCategoryService(
-            ProductRepositoryPort productRepository, EventPublisher eventPublisher) {
+            ProductRepositoryPort productRepository,
+            @Qualifier("catalogEventPublisher") EventPublisher eventPublisher) {
         this.productRepository = productRepository;
         this.eventPublisher = eventPublisher;
     }

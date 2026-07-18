@@ -12,6 +12,7 @@ import com.priceforge.sharedkernel.Money;
 import com.priceforge.sharedkernel.ProductId;
 import java.time.Instant;
 import java.util.Map;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -22,7 +23,9 @@ public class CreateProductService implements CreateProductUseCase {
     private final ProductRepositoryPort productRepository;
     private final EventPublisher eventPublisher;
 
-    public CreateProductService(ProductRepositoryPort productRepository, EventPublisher eventPublisher) {
+    public CreateProductService(
+            ProductRepositoryPort productRepository,
+            @Qualifier("catalogEventPublisher") EventPublisher eventPublisher) {
         this.productRepository = productRepository;
         this.eventPublisher = eventPublisher;
     }
