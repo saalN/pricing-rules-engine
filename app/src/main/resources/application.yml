@@ -9,3 +9,11 @@ spring:
   # per bounded-context schema instead (see arquitectura-tecnica.md, "Persistencia y Outbox").
   flyway:
     enabled: false
+
+priceforge:
+  security:
+    jwt:
+      # Local-dev-only fallback — override with the JWT_SECRET env var anywhere this matters.
+      secret: ${JWT_SECRET:priceforge-local-dev-only-hmac-secret-change-me-32b+}
+      expiration-minutes: 60
+
