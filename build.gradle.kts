@@ -25,6 +25,12 @@ subprojects {
         }
     }
 
+    tasks.withType<JavaCompile> {
+        // Spring MVC resolves @PathVariable/@RequestParam names via reflection when no explicit
+        // name is given on the annotation; without -parameters that lookup fails at request time.
+        options.compilerArgs.add("-parameters")
+    }
+
     configure<DependencyManagementExtension> {
         imports {
             mavenBom("org.springframework.boot:spring-boot-dependencies:3.5.3")
