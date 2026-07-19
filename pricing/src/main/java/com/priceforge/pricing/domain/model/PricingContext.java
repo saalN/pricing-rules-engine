@@ -33,4 +33,15 @@ public record PricingContext(
             throw new IllegalArgumentException("quantity must be positive, but was " + quantity);
         }
     }
+
+    /**
+     * Redis cache key component for UC-06's {@code pricing:quote:{productId}:{contextHash}}
+     * namespacing. Deliberately excludes {@code requestedAt}: a cache key built from the exact
+     * request instant would almost never repeat, defeating the cache. Time-sensitive rules
+     * (TIME_BASED) instead rely on the cache's short TTL to bound staleness — the same tradeoff
+     * every short-TTL cache makes.
+     */
+    public String cacheKey() {
+        return userId().value() + ":" + userSegment() + ":" + quantity() + ":" + location() + ":" + currency();
+    }
 }
