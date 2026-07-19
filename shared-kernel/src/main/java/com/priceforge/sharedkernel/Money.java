@@ -1,5 +1,6 @@
 package com.priceforge.sharedkernel;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.math.BigDecimal;
 import java.util.Currency;
 import java.util.Objects;
@@ -34,10 +35,15 @@ public record Money(BigDecimal amount, Currency currency) {
         return new Money(amount.multiply(factor), currency);
     }
 
+    // @JsonIgnore: these are query methods, not data — without it, Jackson's default bean-property
+    // introspection serializes them as extra "negative"/"zero" JSON properties (since they follow
+    // the isXxx() getter convention), which then breaks deserialization back into this record.
+    @JsonIgnore
     public boolean isNegative() {
         return amount.signum() < 0;
     }
 
+    @JsonIgnore
     public boolean isZero() {
         return amount.signum() == 0;
     }
