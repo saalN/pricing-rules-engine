@@ -2,7 +2,7 @@ spring:
   application:
     name: priceforge
   datasource:
-    url: jdbc:postgresql://localhost:5432/priceforge
+    url: jdbc:postgresql://localhost:5433/priceforge
     username: priceforge
     password: priceforge
   # Disable Spring Boot's single auto-configured Flyway instance: FlywayConfig runs one instance
