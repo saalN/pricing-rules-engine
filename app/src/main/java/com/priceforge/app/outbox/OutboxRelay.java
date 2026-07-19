@@ -3,6 +3,7 @@ package com.priceforge.app.outbox;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.priceforge.sharedkernel.DomainEvent;
+import com.priceforge.sharedkernel.OutboxEventHandler;
 import java.sql.Timestamp;
 import java.time.Instant;
 import java.util.List;
