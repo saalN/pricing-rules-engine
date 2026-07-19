@@ -28,7 +28,7 @@ import com.priceforge.catalog.domain.model.ProductStatus;
 import com.priceforge.catalog.infrastructure.in.http.dto.ChangeProductCategoryRequest;
 import com.priceforge.catalog.infrastructure.in.http.dto.CreateProductRequest;
 import com.priceforge.catalog.infrastructure.in.http.dto.UpdateProductBasePriceRequest;
-import com.priceforge.catalog.infrastructure.in.http.exception.GlobalExceptionHandler;
+import com.priceforge.catalog.infrastructure.in.http.exception.CatalogExceptionHandler;
 import com.priceforge.catalog.infrastructure.in.http.mapper.ProductHttpMapper;
 import com.priceforge.sharedkernel.ProductId;
 import java.math.BigDecimal;
@@ -46,7 +46,7 @@ import org.springframework.test.web.servlet.MockMvc;
 
 @WebMvcTest(ProductController.class)
 @AutoConfigureMockMvc(addFilters = false)
-@Import({ProductHttpMapper.class, GlobalExceptionHandler.class})
+@Import({ProductHttpMapper.class, CatalogExceptionHandler.class})
 class ProductControllerTest {
 
     @Autowired
