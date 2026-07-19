@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 @RestControllerAdvice(basePackages = "com.priceforge.catalog.infrastructure.in.http")
-public class GlobalExceptionHandler {
+public class CatalogExceptionHandler {
 
     @ExceptionHandler(DuplicateSkuException.class)
     @ResponseStatus(HttpStatus.CONFLICT)

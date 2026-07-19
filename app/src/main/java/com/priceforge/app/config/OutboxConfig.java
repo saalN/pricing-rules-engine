@@ -19,4 +19,9 @@ public class OutboxConfig {
     public EventPublisher catalogEventPublisher(JdbcTemplate jdbcTemplate, ObjectMapper objectMapper) {
         return new JdbcOutboxEventPublisher(jdbcTemplate, objectMapper, "catalog");
     }
+
+    @Bean("pricingEventPublisher")
+    public EventPublisher pricingEventPublisher(JdbcTemplate jdbcTemplate, ObjectMapper objectMapper) {
+        return new JdbcOutboxEventPublisher(jdbcTemplate, objectMapper, "pricing");
+    }
 }

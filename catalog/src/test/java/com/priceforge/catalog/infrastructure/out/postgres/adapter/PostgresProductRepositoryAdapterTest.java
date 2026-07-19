@@ -101,4 +101,19 @@ class PostgresProductRepositoryAdapterTest {
 
         assertThat(adapter.existsBySku("SKU-2")).isTrue();
     }
+
+    @Test
+    void findsTheCheapestActiveBasePriceInACategory() {
+        adapter.save(Product.create(
+            ProductId.newId(), "SKU-3", "Widget", "d",
+            Money.of(BigDecimal.valueOf(20), "EUR"), "URBAN", Map.of(), Instant.now()));
+        adapter.save(Product.create(
+            ProductId.newId(), "SKU-4", "Gadget", "d",
+            Money.of(BigDecimal.valueOf(5), "EUR"), "URBAN", Map.of(), Instant.now()));
+
+        Optional<BigDecimal> cheapest = adapter.findCheapestActiveBasePriceAmount(Optional.of("URBAN"));
+
+        assertThat(cheapest).isPresent();
+        assertThat(cheapest.get()).isEqualByComparingTo(BigDecimal.valueOf(5));
+    }
 }

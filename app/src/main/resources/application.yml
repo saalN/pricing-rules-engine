@@ -2,13 +2,23 @@ spring:
   application:
     name: priceforge
   datasource:
-    url: jdbc:postgresql://localhost:5432/priceforge
+    url: jdbc:postgresql://localhost:5433/priceforge
     username: priceforge
     password: priceforge
   # Disable Spring Boot's single auto-configured Flyway instance: FlywayConfig runs one instance
   # per bounded-context schema instead (see arquitectura-tecnica.md, "Persistencia y Outbox").
   flyway:
     enabled: false
+  jackson:
+    deserialization:
+      # A consuming context's local "shadow" event (e.g. Pricing's CatalogProductChangedEvent)
+      # deliberately mirrors only the fields it needs from another context's real event payload —
+      # without this, deserializing into that narrower shape fails on the extra fields.
+      fail-on-unknown-properties: false
+  data:
+    redis:
+      host: localhost
+      port: 6379
 
 priceforge:
   security:
@@ -16,4 +26,8 @@ priceforge:
       # Local-dev-only fallback — override with the JWT_SECRET env var anywhere this matters.
       secret: ${JWT_SECRET:priceforge-local-dev-only-hmac-secret-change-me-32b+}
       expiration-minutes: 60
+  outbox:
+    # Only lists schemas that actually have an outbox_event table yet; extend as each context
+    # (promotions, audit) adds its own.
+    schemas: catalog,pricing
 
