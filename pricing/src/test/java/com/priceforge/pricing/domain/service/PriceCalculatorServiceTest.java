@@ -3,11 +3,11 @@ package com.priceforge.pricing.domain.service;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import com.priceforge.pricing.domain.model.CategoryScope;
-import com.priceforge.pricing.domain.model.CombinationMode;
+import com.priceforge.sharedkernel.CombinationMode;
 import com.priceforge.pricing.domain.model.CustomerSegment;
 import com.priceforge.pricing.domain.model.Discount;
 import com.priceforge.pricing.domain.model.DiscountType;
-import com.priceforge.pricing.domain.model.ExclusionReason;
+import com.priceforge.sharedkernel.ConflictExclusionReason;
 import com.priceforge.pricing.domain.model.GeoCondition;
 import com.priceforge.pricing.domain.model.GlobalScope;
 import com.priceforge.pricing.domain.model.PriceQuote;
@@ -101,7 +101,7 @@ class PriceCalculatorServiceTest {
         assertThat(quote.appliedRules()).extracting(r -> r.ruleId()).containsExactly(highPriorityExclusive.id());
         assertThat(quote.excludedRules()).hasSize(1);
         assertThat(quote.excludedRules().get(0).ruleId()).isEqualTo(lowPriorityStackable.id());
-        assertThat(quote.excludedRules().get(0).reason()).isEqualTo(ExclusionReason.EXCLUDED_BY_HIGHER_PRIORITY);
+        assertThat(quote.excludedRules().get(0).reason()).isEqualTo(ConflictExclusionReason.EXCLUDED_BY_HIGHER_PRIORITY);
     }
 
     @Test
@@ -169,7 +169,7 @@ class PriceCalculatorServiceTest {
         assertThat(quote.appliedRules()).extracting(r -> r.ruleId()).containsExactly(earlierRule.id());
         assertThat(quote.excludedRules()).hasSize(1);
         assertThat(quote.excludedRules().get(0).ruleId()).isEqualTo(laterRule.id());
-        assertThat(quote.excludedRules().get(0).reason()).isEqualTo(ExclusionReason.EXCLUDED_BY_TIEBREAK);
+        assertThat(quote.excludedRules().get(0).reason()).isEqualTo(ConflictExclusionReason.EXCLUDED_BY_TIEBREAK);
     }
 
     @Test
@@ -185,7 +185,7 @@ class PriceCalculatorServiceTest {
             List.of(stackableRule, exclusiveRule), context(), false);
 
         assertThat(quote.appliedRules()).extracting(r -> r.ruleId()).containsExactly(exclusiveRule.id());
-        assertThat(quote.excludedRules().get(0).reason()).isEqualTo(ExclusionReason.EXCLUDED_BY_TIEBREAK);
+        assertThat(quote.excludedRules().get(0).reason()).isEqualTo(ConflictExclusionReason.EXCLUDED_BY_TIEBREAK);
     }
 
     @Test

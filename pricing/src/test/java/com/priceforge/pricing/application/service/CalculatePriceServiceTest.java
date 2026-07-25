@@ -13,7 +13,7 @@ import com.priceforge.pricing.application.service.support.RecordingEventPublishe
 import com.priceforge.pricing.domain.exception.CurrencyMismatchException;
 import com.priceforge.pricing.domain.exception.ProductNotActiveException;
 import com.priceforge.pricing.domain.exception.ProductNotFoundException;
-import com.priceforge.pricing.domain.model.CombinationMode;
+import com.priceforge.sharedkernel.CombinationMode;
 import com.priceforge.pricing.domain.model.CustomerSegment;
 import com.priceforge.pricing.domain.model.Discount;
 import com.priceforge.pricing.domain.model.DiscountType;

@@ -12,7 +12,7 @@ import com.priceforge.pricing.domain.exception.CurrencyMismatchException;
 import com.priceforge.pricing.domain.exception.ProductNotActiveException;
 import com.priceforge.pricing.domain.exception.ProductNotFoundException;
 import com.priceforge.pricing.domain.model.ConflictReason;
-import com.priceforge.pricing.domain.model.ExclusionReason;
+import com.priceforge.sharedkernel.ConflictExclusionReason;
 import com.priceforge.pricing.domain.model.PriceCalculated;
 import com.priceforge.pricing.domain.model.PriceQuote;
 import com.priceforge.pricing.domain.model.PricingContext;
@@ -89,7 +89,7 @@ public class CalculatePriceService implements CalculatePriceUseCase {
         }
 
         List<String> tiebreakRuleIds = quote.excludedRules().stream()
-            .filter(excluded -> excluded.reason() == ExclusionReason.EXCLUDED_BY_TIEBREAK)
+            .filter(excluded -> excluded.reason() == ConflictExclusionReason.EXCLUDED_BY_TIEBREAK)
             .map(excluded -> excluded.ruleId().toString())
             .toList();
         if (!tiebreakRuleIds.isEmpty()) {

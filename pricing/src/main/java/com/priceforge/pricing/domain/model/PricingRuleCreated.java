@@ -1,5 +1,6 @@
 package com.priceforge.pricing.domain.model;
 
+import com.priceforge.sharedkernel.CombinationMode;
 import com.priceforge.sharedkernel.DomainEvent;
 import java.time.Instant;
 import java.util.UUID;

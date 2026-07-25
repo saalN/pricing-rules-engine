@@ -4,6 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import com.priceforge.pricing.domain.exception.PricingRuleNotActiveException;
+import com.priceforge.sharedkernel.CombinationMode;
 import com.priceforge.sharedkernel.PricingRuleId;
 import java.math.BigDecimal;
 import java.time.Instant;

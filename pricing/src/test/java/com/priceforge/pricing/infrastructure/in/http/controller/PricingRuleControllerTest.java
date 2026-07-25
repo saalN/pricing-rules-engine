@@ -15,7 +15,7 @@ import com.priceforge.pricing.application.port.in.CreatePricingRuleUseCase;
 import com.priceforge.pricing.application.port.in.DeactivatePricingRuleUseCase;
 import com.priceforge.pricing.application.port.in.UpdatePricingRuleUseCase;
 import com.priceforge.pricing.domain.exception.InvalidDiscountException;
-import com.priceforge.pricing.domain.model.CombinationMode;
+import com.priceforge.sharedkernel.CombinationMode;
 import com.priceforge.pricing.domain.model.DiscountType;
 import com.priceforge.pricing.domain.model.PricingRuleStatus;
 import com.priceforge.pricing.domain.model.PricingRuleType;
