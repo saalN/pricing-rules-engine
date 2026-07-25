@@ -24,4 +24,9 @@ public class OutboxConfig {
     public EventPublisher pricingEventPublisher(JdbcTemplate jdbcTemplate, ObjectMapper objectMapper) {
         return new JdbcOutboxEventPublisher(jdbcTemplate, objectMapper, "pricing");
     }
+
+    @Bean("promotionsEventPublisher")
+    public EventPublisher promotionsEventPublisher(JdbcTemplate jdbcTemplate, ObjectMapper objectMapper) {
+        return new JdbcOutboxEventPublisher(jdbcTemplate, objectMapper, "promotions");
+    }
 }
