@@ -1,6 +1,6 @@
 package com.priceforge.pricing.infrastructure.in.http.dto;
 
-import com.priceforge.pricing.domain.model.CombinationMode;
+import com.priceforge.sharedkernel.CombinationMode;
 import com.priceforge.pricing.domain.model.CustomerSegment;
 import com.priceforge.pricing.domain.model.DiscountType;
 import com.priceforge.pricing.domain.model.PricingRuleType;

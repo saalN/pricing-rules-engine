@@ -1,16 +1,18 @@
 package com.priceforge.pricing.domain.model;
 
 import com.priceforge.pricing.domain.exception.PricingRuleNotActiveException;
+import com.priceforge.sharedkernel.CombinationMode;
+import com.priceforge.sharedkernel.ConflictResolvable;
 import com.priceforge.sharedkernel.PricingRuleId;
 import java.time.Instant;
 import java.util.Objects;
 
 /**
  * A pricing rule: a condition that gates it, a discount it applies, a priority and combination
- * mode used to resolve conflicts with other rules (UC-07), and a scope determining which products
- * it can apply to.
+ * mode used to resolve conflicts with other rules (UC-07, via shared-kernel's generic
+ * ConflictResolver), and a scope determining which products it can apply to.
  */
-public final class PricingRule {
+public final class PricingRule implements ConflictResolvable<PricingRuleId> {
 
     private final PricingRuleId id;
     private final PricingRuleType type;
@@ -114,6 +116,11 @@ public final class PricingRule {
     }
 
     public PricingRuleId id() {
+        return id;
+    }
+
+    @Override
+    public PricingRuleId conflictId() {
         return id;
     }
 

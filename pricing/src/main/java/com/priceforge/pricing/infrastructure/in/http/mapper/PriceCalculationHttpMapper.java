@@ -4,8 +4,10 @@ import com.priceforge.pricing.application.dto.CalculatePriceCommand;
 import com.priceforge.pricing.application.dto.CalculatePriceResult;
 import com.priceforge.pricing.application.dto.HypotheticalPricingRule;
 import com.priceforge.pricing.application.dto.SimulatePriceCommand;
+import com.priceforge.pricing.infrastructure.in.http.dto.AppliedPromotionResponse;
 import com.priceforge.pricing.infrastructure.in.http.dto.AppliedRuleResponse;
 import com.priceforge.pricing.infrastructure.in.http.dto.CalculatePriceRequest;
+import com.priceforge.pricing.infrastructure.in.http.dto.ExcludedPromotionResponse;
 import com.priceforge.pricing.infrastructure.in.http.dto.ExcludedRuleResponse;
 import com.priceforge.pricing.infrastructure.in.http.dto.PriceQuoteResponse;
 import com.priceforge.pricing.infrastructure.in.http.dto.PricingRuleDefinitionRequest;
@@ -72,6 +74,13 @@ public class PriceCalculationHttpMapper {
                 .toList(),
             result.excludedRules().stream()
                 .map(rule -> new ExcludedRuleResponse(rule.ruleId().value(), rule.reason().name()))
+                .toList(),
+            result.appliedPromotions().stream()
+                .map(promo -> new AppliedPromotionResponse(
+                    promo.sourceId(), promo.description(), promo.discountApplied().amount(), promo.reason()))
+                .toList(),
+            result.excludedPromotions().stream()
+                .map(promo -> new ExcludedPromotionResponse(promo.sourceId(), promo.reason()))
                 .toList(),
             result.calculatedAt(),
             result.simulated());

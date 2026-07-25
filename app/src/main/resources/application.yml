@@ -28,6 +28,6 @@ priceforge:
       expiration-minutes: 60
   outbox:
     # Only lists schemas that actually have an outbox_event table yet; extend as each context
-    # (promotions, audit) adds its own.
-    schemas: catalog,pricing
+    # (audit) adds its own.
+    schemas: catalog,pricing,promotions
 

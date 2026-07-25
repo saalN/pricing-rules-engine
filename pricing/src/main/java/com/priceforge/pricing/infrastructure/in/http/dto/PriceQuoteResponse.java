@@ -11,6 +11,8 @@ public record PriceQuoteResponse(
     String currency,
     List<AppliedRuleResponse> appliedRules,
     List<ExcludedRuleResponse> excludedRules,
+    List<AppliedPromotionResponse> appliedPromotions,
+    List<ExcludedPromotionResponse> excludedPromotions,
     Instant calculatedAt,
     boolean simulated
 ) {

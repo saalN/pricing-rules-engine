@@ -7,7 +7,7 @@ import com.priceforge.app.security.dto.LoginRequest;
 import com.priceforge.app.security.dto.LoginResponse;
 import com.priceforge.catalog.infrastructure.in.http.dto.CreateProductRequest;
 import com.priceforge.catalog.infrastructure.in.http.dto.CreateProductResponse;
-import com.priceforge.pricing.domain.model.CombinationMode;
+import com.priceforge.sharedkernel.CombinationMode;
 import com.priceforge.pricing.domain.model.CustomerSegment;
 import com.priceforge.pricing.domain.model.DiscountType;
 import com.priceforge.pricing.domain.model.PricingRuleType;

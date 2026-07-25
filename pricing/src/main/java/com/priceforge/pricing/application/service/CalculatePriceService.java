@@ -8,19 +8,22 @@ import com.priceforge.pricing.application.dto.CalculatePriceResult;
 import com.priceforge.pricing.application.port.in.CalculatePriceUseCase;
 import com.priceforge.pricing.application.port.out.PriceQuoteCachePort;
 import com.priceforge.pricing.application.port.out.PricingRuleRepositoryPort;
+import com.priceforge.pricing.application.port.out.PromotionApplierPort;
 import com.priceforge.pricing.domain.exception.CurrencyMismatchException;
 import com.priceforge.pricing.domain.exception.ProductNotActiveException;
 import com.priceforge.pricing.domain.exception.ProductNotFoundException;
 import com.priceforge.pricing.domain.model.ConflictReason;
-import com.priceforge.pricing.domain.model.ExclusionReason;
 import com.priceforge.pricing.domain.model.PriceCalculated;
 import com.priceforge.pricing.domain.model.PriceQuote;
 import com.priceforge.pricing.domain.model.PricingContext;
 import com.priceforge.pricing.domain.model.PricingRule;
+import com.priceforge.pricing.domain.model.PromotionApplicationOutcome;
 import com.priceforge.pricing.domain.model.RuleConflictDetected;
 import com.priceforge.pricing.domain.service.PriceCalculatorService;
+import com.priceforge.sharedkernel.ConflictExclusionReason;
 import com.priceforge.sharedkernel.EventPublisher;
 import com.priceforge.sharedkernel.Money;
+import java.time.Instant;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
@@ -33,6 +36,7 @@ public class CalculatePriceService implements CalculatePriceUseCase {
     private final GetProductUseCase getProductUseCase;
     private final PricingRuleRepositoryPort pricingRuleRepository;
     private final PriceQuoteCachePort cache;
+    private final PromotionApplierPort promotionApplierPort;
     private final EventPublisher eventPublisher;
     private final PriceCalculatorService calculator = new PriceCalculatorService();
 
@@ -40,10 +44,12 @@ public class CalculatePriceService implements CalculatePriceUseCase {
             GetProductUseCase getProductUseCase,
             PricingRuleRepositoryPort pricingRuleRepository,
             PriceQuoteCachePort cache,
+            PromotionApplierPort promotionApplierPort,
             @Qualifier("pricingEventPublisher") EventPublisher eventPublisher) {
         this.getProductUseCase = getProductUseCase;
         this.pricingRuleRepository = pricingRuleRepository;
         this.cache = cache;
+        this.promotionApplierPort = promotionApplierPort;
         this.eventPublisher = eventPublisher;
     }
 
@@ -63,22 +69,40 @@ public class CalculatePriceService implements CalculatePriceUseCase {
             command.productId(), command.userId(), command.userSegment(), command.quantity(),
             command.requestedAt(), command.location(), command.currency(), command.zoneId());
 
-        var cached = cache.get(command.productId(), context.cacheKey());
-        if (cached.isPresent()) {
-            return CalculatePriceResult.from(cached.get());
+        PriceQuote pricingRulesQuote = cache.get(command.productId(), context.cacheKey()).orElse(null);
+        if (pricingRulesQuote == null) {
+            List<PricingRule> activeRules = pricingRuleRepository.findAllActive();
+            Money basePrice = Money.of(product.basePriceAmount(), product.currency());
+            pricingRulesQuote = calculator.calculate(
+                basePrice, command.productId(), product.category(), activeRules, context, false);
+            publishConflictsIfAny(pricingRulesQuote);
+            cache.put(command.productId(), context.cacheKey(), pricingRulesQuote);
         }
 
-        List<PricingRule> activeRules = pricingRuleRepository.findAllActive();
-        Money basePrice = Money.of(product.basePriceAmount(), product.currency());
+        // Promotions are never served from cache: their usage limits must be checked and
+        // incremented atomically on every request that qualifies, not just on a cache miss.
+        PromotionApplicationOutcome promotionOutcome = promotionApplierPort.apply(
+            pricingRulesQuote.finalPrice(), context, command.productId(), product.category());
 
-        PriceQuote quote = calculator.calculate(
-            basePrice, command.productId(), product.category(), activeRules, context, false);
+        PriceQuote finalQuote = mergePromotions(pricingRulesQuote, promotionOutcome, context);
+        eventPublisher.publish(PriceCalculated.of(finalQuote));
 
-        eventPublisher.publish(PriceCalculated.of(quote));
-        publishConflictsIfAny(quote);
-        cache.put(command.productId(), context.cacheKey(), quote);
+        return CalculatePriceResult.from(finalQuote);
+    }
 
-        return CalculatePriceResult.from(quote);
+    private PriceQuote mergePromotions(
+            PriceQuote pricingRulesQuote, PromotionApplicationOutcome promotionOutcome, PricingContext context) {
+        return new PriceQuote(
+            pricingRulesQuote.basePrice(),
+            promotionOutcome.newPrice(),
+            pricingRulesQuote.appliedRules(),
+            pricingRulesQuote.excludedRules(),
+            promotionOutcome.applied(),
+            promotionOutcome.excluded(),
+            Instant.now(),
+            context,
+            pricingRulesQuote.priceFloorApplied() || promotionOutcome.priceFloorApplied(),
+            false);
     }
 
     private void publishConflictsIfAny(PriceQuote quote) {
@@ -89,7 +113,7 @@ public class CalculatePriceService implements CalculatePriceUseCase {
         }
 
         List<String> tiebreakRuleIds = quote.excludedRules().stream()
-            .filter(excluded -> excluded.reason() == ExclusionReason.EXCLUDED_BY_TIEBREAK)
+            .filter(excluded -> excluded.reason() == ConflictExclusionReason.EXCLUDED_BY_TIEBREAK)
             .map(excluded -> excluded.ruleId().toString())
             .toList();
         if (!tiebreakRuleIds.isEmpty()) {

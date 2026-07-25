@@ -11,7 +11,7 @@ import com.priceforge.pricing.application.service.support.FakeGetProductUseCase;
 import com.priceforge.pricing.application.service.support.InMemoryPricingRuleRepositoryPort;
 import com.priceforge.pricing.application.service.support.RecordingEventPublisher;
 import com.priceforge.pricing.domain.exception.InvalidDiscountException;
-import com.priceforge.pricing.domain.model.CombinationMode;
+import com.priceforge.sharedkernel.CombinationMode;
 import com.priceforge.pricing.domain.model.DiscountType;
 import com.priceforge.pricing.domain.model.PricingRuleCreated;
 import com.priceforge.pricing.domain.model.PricingRuleType;

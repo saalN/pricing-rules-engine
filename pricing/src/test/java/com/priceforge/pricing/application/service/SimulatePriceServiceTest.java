@@ -8,7 +8,7 @@ import com.priceforge.pricing.application.dto.HypotheticalPricingRule;
 import com.priceforge.pricing.application.dto.SimulatePriceCommand;
 import com.priceforge.pricing.application.service.support.FakeGetProductUseCase;
 import com.priceforge.pricing.application.service.support.InMemoryPricingRuleRepositoryPort;
-import com.priceforge.pricing.domain.model.CombinationMode;
+import com.priceforge.sharedkernel.CombinationMode;
 import com.priceforge.pricing.domain.model.CustomerSegment;
 import com.priceforge.pricing.domain.model.DiscountType;
 import com.priceforge.pricing.domain.model.PricingRuleType;
