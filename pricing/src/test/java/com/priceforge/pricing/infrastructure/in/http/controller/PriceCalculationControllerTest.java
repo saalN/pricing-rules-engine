@@ -50,7 +50,8 @@ class PriceCalculationControllerTest {
 
     private CalculatePriceResult sampleResult(boolean simulated) {
         return new CalculatePriceResult(
-            BigDecimal.valueOf(100), BigDecimal.valueOf(80), "EUR", List.of(), List.of(), Instant.now(), simulated);
+            BigDecimal.valueOf(100), BigDecimal.valueOf(80), "EUR", List.of(), List.of(), List.of(), List.of(),
+            Instant.now(), simulated);
     }
 
     @Test

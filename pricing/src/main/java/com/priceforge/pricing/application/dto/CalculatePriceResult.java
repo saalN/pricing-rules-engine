@@ -1,6 +1,8 @@
 package com.priceforge.pricing.application.dto;
 
+import com.priceforge.pricing.domain.model.AppliedPromotionDetail;
 import com.priceforge.pricing.domain.model.AppliedRuleDetail;
+import com.priceforge.pricing.domain.model.ExcludedPromotionDetail;
 import com.priceforge.pricing.domain.model.ExcludedRuleDetail;
 import com.priceforge.pricing.domain.model.PriceQuote;
 import java.math.BigDecimal;
@@ -14,6 +16,8 @@ public record CalculatePriceResult(
     String currency,
     List<AppliedRuleDetail> appliedRules,
     List<ExcludedRuleDetail> excludedRules,
+    List<AppliedPromotionDetail> appliedPromotions,
+    List<ExcludedPromotionDetail> excludedPromotions,
     Instant calculatedAt,
     boolean simulated
 ) {
@@ -25,6 +29,8 @@ public record CalculatePriceResult(
             quote.finalPrice().currency().getCurrencyCode(),
             quote.appliedRules(),
             quote.excludedRules(),
+            quote.appliedPromotions(),
+            quote.excludedPromotions(),
             quote.calculatedAt(),
             quote.simulated());
     }

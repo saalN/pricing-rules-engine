@@ -57,7 +57,7 @@ class RedisPriceQuoteCacheAdapterTest {
             productId, UserId.newId(), CustomerSegment.VIP, 1, Instant.now(), "URBAN", "EUR", ZoneId.of("UTC"));
         return new PriceQuote(
             Money.of(BigDecimal.TEN, "EUR"), Money.of(BigDecimal.valueOf(8), "EUR"),
-            List.of(), List.of(), Instant.now(), context, false, false);
+            List.of(), List.of(), List.of(), List.of(), Instant.now(), context, false, false);
     }
 
     @Test

@@ -62,7 +62,8 @@ public final class PriceCalculatorService {
         }
 
         return new PriceQuote(
-            basePrice, currentPrice, appliedRules, excludedRules, Instant.now(), context, priceFloorApplied, simulated);
+            basePrice, currentPrice, appliedRules, excludedRules, List.of(), List.of(),
+            Instant.now(), context, priceFloorApplied, simulated);
     }
 
     private GroupOutcome applyGroup(Money groupStartPrice, List<PricingRule> group) {
