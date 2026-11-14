@@ -1,6 +1,6 @@
 package com.priceforge.promotions.domain.model;
 
-import com.priceforge.pricing.domain.model.CustomerSegment;
+import com.priceforge.sharedkernel.CustomerSegment;
 import com.priceforge.sharedkernel.Money;
 import java.math.BigDecimal;
 

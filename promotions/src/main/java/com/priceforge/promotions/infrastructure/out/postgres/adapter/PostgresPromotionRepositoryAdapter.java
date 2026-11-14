@@ -33,7 +33,7 @@ public class PostgresPromotionRepositoryAdapter implements PromotionRepositoryPo
      * repo) is instantiated directly in tests to sidestep {@code @DataJpaTest}'s component scan,
      * so an annotation alone would silently do nothing there and leave the row locks below
      * protecting nothing. {@link TransactionTemplate} establishes a real transaction boundary
-     * (joining an ambient one if the caller already started one, e.g. {@code PromotionApplierService}) regardless of how this class was instantiated.
+     * (joining an ambient one if the caller already started one, e.g. {@code ApplyPromotionsService}) regardless of how this class was instantiated.
      */
     public PostgresPromotionRepositoryAdapter(
             SpringDataPromotionPostgresRepository springDataRepository,

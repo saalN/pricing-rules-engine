@@ -1,5 +1,7 @@
 package com.priceforge.pricing.domain.model;
 
+import com.priceforge.sharedkernel.CustomerSegment;
+import com.priceforge.sharedkernel.PricingContext;
 import java.util.Objects;
 
 public record SegmentCondition(CustomerSegment segment) implements RuleCondition {

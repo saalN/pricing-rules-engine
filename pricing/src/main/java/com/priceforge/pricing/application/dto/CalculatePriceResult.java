@@ -1,8 +1,8 @@
 package com.priceforge.pricing.application.dto;
 
-import com.priceforge.pricing.domain.model.AppliedPromotionDetail;
+import com.priceforge.sharedkernel.AppliedPromotionDetail;
 import com.priceforge.pricing.domain.model.AppliedRuleDetail;
-import com.priceforge.pricing.domain.model.ExcludedPromotionDetail;
+import com.priceforge.sharedkernel.ExcludedPromotionDetail;
 import com.priceforge.pricing.domain.model.ExcludedRuleDetail;
 import com.priceforge.pricing.domain.model.PriceQuote;
 import java.math.BigDecimal;

@@ -11,7 +11,7 @@ import com.priceforge.app.security.dto.LoginResponse;
 import com.priceforge.catalog.infrastructure.in.http.dto.CreateProductRequest;
 import com.priceforge.catalog.infrastructure.in.http.dto.CreateProductResponse;
 import com.priceforge.catalog.infrastructure.in.http.dto.UpdateProductBasePriceRequest;
-import com.priceforge.pricing.domain.model.CustomerSegment;
+import com.priceforge.sharedkernel.CustomerSegment;
 import com.priceforge.pricing.domain.model.DiscountType;
 import com.priceforge.pricing.domain.model.PricingRuleType;
 import com.priceforge.pricing.infrastructure.in.http.dto.CalculatePriceRequest;

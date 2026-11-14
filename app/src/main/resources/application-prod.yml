@@ -1,0 +1,14 @@
+# Production overrides, active with SPRING_PROFILES_ACTIVE=prod.
+priceforge:
+  security:
+    jwt:
+      # No default on purpose: startup fails if JWT_SECRET is not provided.
+      secret: ${JWT_SECRET}
+    demo-token-endpoint:
+      enabled: false
+
+springdoc:
+  api-docs:
+    enabled: false
+  swagger-ui:
+    enabled: false

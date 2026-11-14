@@ -14,7 +14,7 @@ import com.priceforge.pricing.domain.exception.ProductNotActiveException;
 import com.priceforge.pricing.domain.exception.ProductNotFoundException;
 import com.priceforge.pricing.domain.model.Discount;
 import com.priceforge.pricing.domain.model.PriceQuote;
-import com.priceforge.pricing.domain.model.PricingContext;
+import com.priceforge.sharedkernel.PricingContext;
 import com.priceforge.pricing.domain.model.PricingRule;
 import com.priceforge.pricing.domain.model.RuleCondition;
 import com.priceforge.pricing.domain.model.RuleScope;

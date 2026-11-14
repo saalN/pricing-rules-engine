@@ -1,4 +1,4 @@
-package com.priceforge.pricing.domain.model;
+package com.priceforge.sharedkernel;
 
 public record ExcludedPromotionDetail(String sourceId, String reason) {
 }

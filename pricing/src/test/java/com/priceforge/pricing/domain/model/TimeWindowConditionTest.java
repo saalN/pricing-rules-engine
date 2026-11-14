@@ -1,5 +1,7 @@
 package com.priceforge.pricing.domain.model;
 
+import com.priceforge.sharedkernel.CustomerSegment;
+import com.priceforge.sharedkernel.PricingContext;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import com.priceforge.sharedkernel.ProductId;

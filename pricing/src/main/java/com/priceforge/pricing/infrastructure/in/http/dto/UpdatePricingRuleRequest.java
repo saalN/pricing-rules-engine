@@ -1,7 +1,7 @@
 package com.priceforge.pricing.infrastructure.in.http.dto;
 
 import com.priceforge.sharedkernel.CombinationMode;
-import com.priceforge.pricing.domain.model.CustomerSegment;
+import com.priceforge.sharedkernel.CustomerSegment;
 import com.priceforge.pricing.domain.model.DiscountType;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;

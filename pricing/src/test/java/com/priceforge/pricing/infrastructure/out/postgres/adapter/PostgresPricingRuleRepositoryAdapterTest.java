@@ -3,7 +3,7 @@ package com.priceforge.pricing.infrastructure.out.postgres.adapter;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import com.priceforge.sharedkernel.CombinationMode;
-import com.priceforge.pricing.domain.model.CustomerSegment;
+import com.priceforge.sharedkernel.CustomerSegment;
 import com.priceforge.pricing.domain.model.Discount;
 import com.priceforge.pricing.domain.model.DiscountType;
 import com.priceforge.pricing.domain.model.GlobalScope;

@@ -1,5 +1,6 @@
 package com.priceforge.pricing.domain.model;
 
+import com.priceforge.sharedkernel.PricingContext;
 import com.priceforge.sharedkernel.DomainEvent;
 import java.math.BigDecimal;
 import java.time.Instant;

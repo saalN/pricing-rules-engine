@@ -1,10 +1,11 @@
 package com.priceforge.promotions.application.service;
 
-import com.priceforge.pricing.application.port.out.PromotionApplierPort;
-import com.priceforge.pricing.domain.model.AppliedPromotionDetail;
-import com.priceforge.pricing.domain.model.ExcludedPromotionDetail;
-import com.priceforge.pricing.domain.model.PricingContext;
-import com.priceforge.pricing.domain.model.PromotionApplicationOutcome;
+import com.priceforge.sharedkernel.AppliedPromotionDetail;
+import com.priceforge.sharedkernel.ExcludedPromotionDetail;
+import com.priceforge.sharedkernel.PricingContext;
+import com.priceforge.sharedkernel.PromotionApplicationOutcome;
+import com.priceforge.promotions.application.dto.ApplyPromotionsCommand;
+import com.priceforge.promotions.application.port.in.ApplyPromotionsUseCase;
 import com.priceforge.promotions.application.port.out.PromotionRepositoryPort;
 import com.priceforge.promotions.domain.model.Discount;
 import com.priceforge.promotions.domain.model.DiscountType;
@@ -17,7 +18,6 @@ import com.priceforge.sharedkernel.ConflictResolution;
 import com.priceforge.sharedkernel.ConflictResolver;
 import com.priceforge.sharedkernel.EventPublisher;
 import com.priceforge.sharedkernel.Money;
-import com.priceforge.sharedkernel.ProductId;
 import com.priceforge.sharedkernel.PromotionId;
 import com.priceforge.sharedkernel.ResolvedGroup;
 import com.priceforge.sharedkernel.UserId;
@@ -30,21 +30,20 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 /**
- * Pricing's outbound extension point (UC-11), implemented here so Pricing never depends on
- * Promotions — the dependency points the other way, as Promotions already depends on Pricing's
- * ports. Mirrors {@code PriceCalculatorService}'s own shape: eligibility filter, shared
+ * UC-11, reached by Pricing through its {@code PromotionApplierPort} extension point (see
+ * {@code PricingPromotionApplierAdapter}). Mirrors {@code PriceCalculatorService}'s own shape: eligibility filter, shared
  * {@link ConflictResolver}, then apply groups in priority order, each group computed against a
  * common starting price. The one addition UC-07/UC-06 doesn't need: an atomic usage-limit
  * check-and-increment per promotion before its discount is allowed to count, since limits must
  * never be bypassed by a losing race.
  */
 @Service
-public class PromotionApplierService implements PromotionApplierPort {
+public class ApplyPromotionsService implements ApplyPromotionsUseCase {
 
     private final PromotionRepositoryPort promotionRepository;
     private final EventPublisher eventPublisher;
 
-    public PromotionApplierService(
+    public ApplyPromotionsService(
             PromotionRepositoryPort promotionRepository,
             @Qualifier("promotionsEventPublisher") EventPublisher eventPublisher) {
         this.promotionRepository = promotionRepository;
@@ -53,7 +52,10 @@ public class PromotionApplierService implements PromotionApplierPort {
 
     @Override
     @Transactional
-    public PromotionApplicationOutcome apply(Money currentPrice, PricingContext context, ProductId productId, String category) {
+    public PromotionApplicationOutcome execute(ApplyPromotionsCommand command) {
+        Money currentPrice = command.currentPrice();
+        PricingContext context = command.context();
+        String category = command.category();
         List<Promotion> eligible = promotionRepository.findAllActive().stream()
             .filter(promotion -> promotion.isEligible(context.userSegment(), category, currentPrice, context.requestedAt()))
             .toList();

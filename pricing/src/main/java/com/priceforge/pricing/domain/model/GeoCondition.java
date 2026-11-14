@@ -1,5 +1,6 @@
 package com.priceforge.pricing.domain.model;
 
+import com.priceforge.sharedkernel.PricingContext;
 import java.util.Objects;
 
 /**

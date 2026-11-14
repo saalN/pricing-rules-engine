@@ -14,7 +14,7 @@ import com.priceforge.pricing.domain.model.PricingRuleType;
 import com.priceforge.pricing.domain.model.ProductScope;
 import com.priceforge.pricing.domain.model.RuleScope;
 import com.priceforge.pricing.domain.model.SegmentCondition;
-import com.priceforge.pricing.domain.model.CustomerSegment;
+import com.priceforge.sharedkernel.CustomerSegment;
 import com.priceforge.sharedkernel.CombinationMode;
 import com.priceforge.sharedkernel.PricingRuleId;
 import com.priceforge.sharedkernel.ProductId;
