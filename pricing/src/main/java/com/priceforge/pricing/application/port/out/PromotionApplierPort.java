@@ -7,8 +7,7 @@ import com.priceforge.sharedkernel.ProductId;
 
 /**
  * UC-06/UC-11's extension point: Promotions applies on top of the price already resulting from
- * pricing rules. Pricing defines this port using only its own vocabulary (arquitectura-tecnica.md
- * calls it "the conflict-resolution extension point") so Promotions can implement it without
+ * pricing rules. Pricing defines this port using only shared vocabulary, so Promotions can implement it without
  * Pricing ever depending on Promotions — the dependency points the other way (Promotions depends
  * on Pricing's ports), so Pricing cannot call into Promotions directly.
  */

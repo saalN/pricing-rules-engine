@@ -27,8 +27,9 @@ Each context lives under `com.priceforge.<context>` with three subpackages:
 - `domain` has zero framework imports (no Spring, no JPA, no Jackson annotations).
 - Entities/DTOs never cross a layer boundary unmapped — a JPA entity never leaves
   `infrastructure/out`, an HTTP DTO never leaves `infrastructure/in`.
-- `@Transactional` and `@PreAuthorize` live in `application/service`, not in controllers — see
-  arquitectura-tecnica.md's authorization decision.
+- `@Transactional` and `@PreAuthorize` live in `application/service`, not in controllers, so a rule
+  holds for every way into a use case (HTTP, scheduler, another context). See "Design decisions"
+  in the README.
 - Controllers/listeners depend on `*UseCase` interfaces, never on `*Service` classes directly.
 
 ## Cross-context dependency rule
@@ -43,5 +44,6 @@ reactions to domain events (e.g. Pricing invalidating its cache when Catalog cha
 price) are implemented as an inbound adapter in the *consuming* module, listening to the emitting
 module's outbox — never by calling the emitting module's internals directly.
 
-See the `hexagonal-boundary-check`, `new-use-case`, and `new-adapter` Claude Code skills for
-enforcement and scaffolding of this convention.
+The rules above hold across the whole repository: no domain class imports Spring or JPA, no
+application class imports infrastructure, and the only cross-context imports are `shared-kernel`
+and other contexts' published `application/port` interfaces and DTOs.

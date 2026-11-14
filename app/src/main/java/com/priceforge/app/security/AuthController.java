@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
- * Demo/testing utility only — not one of funcionalidad.md's use cases. The functional spec
+ * Demo/testing utility only — not one of the functional use cases. The functional spec
  * assumes a role is already resolved for the caller; it never defines how a token is issued, so
  * this exists solely to make the RBAC on UC-01..UC-15 exercisable end-to-end.
  *

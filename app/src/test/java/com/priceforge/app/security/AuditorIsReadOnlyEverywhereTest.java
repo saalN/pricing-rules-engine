@@ -28,7 +28,7 @@ import com.redis.testcontainers.RedisContainer;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 /**
- * The Auditor's segregation-of-duties guarantee (funcionalidad.md, "Roles y Permisos"): no write
+ * The Auditor's segregation-of-duties guarantee (the functional spec's permissions table): no write
  * path anywhere in the system accepts the AUDITOR role. Rather than hand-listing the write use
  * cases — which would silently miss the next one — this walks every application service in every
  * context and requires each either to deny the AUDITOR or to be on the explicit read-only /

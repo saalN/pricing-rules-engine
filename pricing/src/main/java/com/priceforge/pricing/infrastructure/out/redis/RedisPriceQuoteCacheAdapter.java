@@ -14,7 +14,7 @@ import org.springframework.stereotype.Repository;
 
 /**
  * Namespaced {@code pricing:quote:{productId}:{contextHash}} with a short TTL
- * (arquitectura-tecnica.md). Caching is best-effort: a serialization failure on write is
+ * (60 seconds by default, {@code priceforge.pricing.cache.ttl-seconds}). Caching is best-effort: a serialization failure on write is
  * swallowed rather than failing the calculation, and a corrupt/unreadable entry on read is
  * treated as a cache miss.
  */
