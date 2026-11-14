@@ -2,6 +2,7 @@ package com.priceforge.sharedkernel;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.Currency;
 import java.util.Objects;
 
@@ -33,6 +34,16 @@ public record Money(BigDecimal amount, Currency currency) {
     public Money multipliedBy(BigDecimal factor) {
         Objects.requireNonNull(factor, "factor must not be null");
         return new Money(amount.multiply(factor), currency);
+    }
+
+    /**
+     * The amount rounded half-up to the currency's own number of decimals (2 for EUR/USD, 0 for
+     * JPY). Arithmetic on {@code Money} never rounds by itself, so a pricing step that must produce
+     * a payable amount — a discount line, a quoted price — calls this explicitly.
+     */
+    public Money roundedToCurrency() {
+        int digits = Math.max(currency.getDefaultFractionDigits(), 0);
+        return new Money(amount.setScale(digits, RoundingMode.HALF_UP), currency);
     }
 
     // @JsonIgnore: these are query methods, not data — without it, Jackson's default bean-property

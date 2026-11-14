@@ -91,7 +91,8 @@ public class CreatePromotionService implements CreatePromotionUseCase {
         if (cheapestPrice.minus(totalWorstCaseDiscount).amount().signum() <= 0) {
             throw new InvalidPromotionDiscountException(
                 "This promotion, combined with the worst-case active pricing rules, could drive the price of "
-                    + "the cheapest active product in scope (" + cheapestBasePriceAmount + " " + currency
+                    + "the cheapest active product in scope (" + cheapestPrice.roundedToCurrency().amount().toPlainString()
+                    + " " + currency
                     + ") to zero or below");
         }
     }

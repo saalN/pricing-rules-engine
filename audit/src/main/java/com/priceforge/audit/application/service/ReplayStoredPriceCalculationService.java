@@ -9,6 +9,7 @@ import com.priceforge.audit.domain.exception.PriceCalculationNotFoundException;
 import com.priceforge.audit.domain.model.AuditEntityType;
 import com.priceforge.audit.domain.model.AuditEntry;
 import com.priceforge.audit.domain.model.PriceCalculationSnapshot;
+import com.priceforge.sharedkernel.Money;
 import java.math.BigDecimal;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
@@ -43,9 +44,15 @@ public class ReplayStoredPriceCalculationService implements ReplayStoredPriceCal
         PriceCalculationSnapshot snapshot = entry.priceSnapshot();
         BigDecimal replayed = priceReplay.replayFinalPrice(snapshot);
 
+        // The stored column keeps four decimals; report both prices in the currency's own.
         return new ReplayStoredPriceCalculationResult(
             entry.eventId(), entry.occurredAt(), snapshot.currency(),
-            snapshot.finalPriceAmount(), replayed,
+            inCurrencyDecimals(snapshot.finalPriceAmount(), snapshot.currency()),
+            inCurrencyDecimals(replayed, snapshot.currency()),
             snapshot.finalPriceAmount().compareTo(replayed) == 0);
+    }
+
+    private static BigDecimal inCurrencyDecimals(BigDecimal amount, String currency) {
+        return Money.of(amount, currency).roundedToCurrency().amount();
     }
 }

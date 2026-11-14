@@ -117,9 +117,8 @@ public class ApplyPromotionsService implements ApplyPromotionsUseCase {
 
     private String describe(Promotion promotion) {
         Discount discount = promotion.discount();
-        String discountText = discount.type() == DiscountType.PERCENTAGE
-            ? discount.value() + "%"
-            : discount.value().toString();
+        String value = discount.value().stripTrailingZeros().toPlainString();
+        String discountText = discount.type() == DiscountType.PERCENTAGE ? value + "%" : value;
         return promotion.name() + " (" + discount.type() + " " + discountText + ")";
     }
 

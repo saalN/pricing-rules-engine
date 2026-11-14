@@ -27,11 +27,16 @@ public record Discount(DiscountType type, BigDecimal value) {
         }
     }
 
-    /** The Money amount this discount removes from {@code price} — never clamped here. */
+    /**
+     * The Money amount this discount removes from {@code price} — never clamped here, but rounded
+     * to the currency's decimals so every discount line is a payable amount and the lines add up
+     * exactly to the price they produce.
+     */
     public Money amountFor(Money price) {
-        return switch (type) {
+        Money raw = switch (type) {
             case PERCENTAGE -> price.multipliedBy(value.divide(BigDecimal.valueOf(100), 10, RoundingMode.HALF_UP));
             case FIXED_AMOUNT -> Money.of(value, price.currency().getCurrencyCode());
         };
+        return raw.roundedToCurrency();
     }
 }

@@ -82,4 +82,18 @@ class ReplayStoredPriceCalculationServiceTest {
         assertThatThrownBy(() -> service.execute(new ReplayStoredPriceCalculationCommand(ruleChange.eventId())))
             .isInstanceOf(PriceCalculationNotFoundException.class);
     }
+
+    @Test
+    void reportsBothPricesInTheCurrencysDecimals() {
+        AuditEntry stored = AuditEntries.priceCalculation(
+            "p-1", "u-1", T1, BigDecimal.valueOf(100), new BigDecimal("85.0000"));
+        repository.saveIfAbsent(stored);
+        priceReplay.replayTo(new BigDecimal("85.000000000000"));
+
+        ReplayStoredPriceCalculationResult result =
+            service.execute(new ReplayStoredPriceCalculationCommand(stored.eventId()));
+
+        assertThat(result.originalFinalPriceAmount()).isEqualTo(new BigDecimal("85.00"));
+        assertThat(result.replayedFinalPriceAmount()).isEqualTo(new BigDecimal("85.00"));
+    }
 }

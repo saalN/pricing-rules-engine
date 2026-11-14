@@ -273,4 +273,35 @@ class PriceCalculatorServiceTest {
     private BigDecimal amount(Money money) {
         return money.amount();
     }
+
+    @Test
+    void quotesEveryFigureInTheCurrencysDecimalsEvenWhenTheBasePriceComesWithMoreOfThem() {
+        PricingRule rule = rule(alwaysMatches(), new GlobalScope(),
+            new Discount(DiscountType.PERCENTAGE, BigDecimal.valueOf(20)), 10, CombinationMode.STACKABLE, Instant.now());
+
+        PriceQuote quote = calculator.calculate(
+            Money.of(new BigDecimal("100.0000"), "EUR"), productId, "URBAN", List.of(rule), context(), false);
+
+        assertThat(quote.basePrice().amount()).isEqualTo(new BigDecimal("100.00"));
+        assertThat(quote.appliedRules().get(0).discountApplied().amount()).isEqualTo(new BigDecimal("20.00"));
+        assertThat(quote.finalPrice().amount()).isEqualTo(new BigDecimal("80.00"));
+    }
+
+    @Test
+    void roundsEachDiscountLineSoTheLinesAddUpExactlyToTheFinalPrice() {
+        PricingRule tenPercent = rule(alwaysMatches(), new GlobalScope(),
+            new Discount(DiscountType.PERCENTAGE, BigDecimal.TEN), 10, CombinationMode.STACKABLE, Instant.now());
+        PricingRule fivePercent = rule(alwaysMatches(), new GlobalScope(),
+            new Discount(DiscountType.PERCENTAGE, BigDecimal.valueOf(5)), 10, CombinationMode.STACKABLE, Instant.now());
+
+        PriceQuote quote = calculator.calculate(
+            Money.of(new BigDecimal("33.33"), "EUR"), productId, "URBAN", List.of(tenPercent, fivePercent), context(), false);
+
+        // 10% of 33.33 = 3.333 -> 3.33; 5% = 1.6665 -> 1.67; 33.33 - 3.33 - 1.67 = 28.33
+        BigDecimal discounts = quote.appliedRules().stream()
+            .map(applied -> applied.discountApplied().amount())
+            .reduce(BigDecimal.ZERO, BigDecimal::add);
+        assertThat(quote.finalPrice().amount()).isEqualTo(new BigDecimal("28.33"));
+        assertThat(quote.basePrice().amount().subtract(discounts)).isEqualTo(quote.finalPrice().amount());
+    }
 }
