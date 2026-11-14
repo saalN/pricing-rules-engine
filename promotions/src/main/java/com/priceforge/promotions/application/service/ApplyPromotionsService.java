@@ -23,6 +23,7 @@ import com.priceforge.sharedkernel.ResolvedGroup;
 import com.priceforge.sharedkernel.UserId;
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.Currency;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -56,8 +57,13 @@ public class ApplyPromotionsService implements ApplyPromotionsUseCase {
         Money currentPrice = command.currentPrice();
         PricingContext context = command.context();
         String category = command.category();
+        // Sorted by id so promotions tied at one priority are always locked in the same order by
+        // concurrent requests: the database gives no ordering guarantee, and two requests locking
+        // the same pair in opposite orders would deadlock. Across priorities the resolver already
+        // orders groups from highest to lowest.
         List<Promotion> eligible = promotionRepository.findAllActive().stream()
             .filter(promotion -> promotion.isEligible(context.userSegment(), category, currentPrice, context.requestedAt()))
+            .sorted(Comparator.comparing(promotion -> promotion.id().value()))
             .toList();
 
         ConflictResolution<Promotion, PromotionId> resolution = ConflictResolver.resolve(eligible);
@@ -117,9 +123,8 @@ public class ApplyPromotionsService implements ApplyPromotionsUseCase {
 
     private String describe(Promotion promotion) {
         Discount discount = promotion.discount();
-        String discountText = discount.type() == DiscountType.PERCENTAGE
-            ? discount.value() + "%"
-            : discount.value().toString();
+        String value = discount.value().stripTrailingZeros().toPlainString();
+        String discountText = discount.type() == DiscountType.PERCENTAGE ? value + "%" : value;
         return promotion.name() + " (" + discount.type() + " " + discountText + ")";
     }
 

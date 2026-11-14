@@ -1,5 +1,8 @@
 package com.priceforge.promotions.application.service;
 
+import com.priceforge.sharedkernel.AppliedPromotionDetail;
+import java.util.List;
+import java.util.ArrayList;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import com.priceforge.sharedkernel.CustomerSegment;
@@ -158,5 +161,24 @@ class ApplyPromotionsServiceTest {
 
         assertThat(outcome.newPrice().amount()).isEqualByComparingTo(BigDecimal.valueOf(85));
         assertThat(outcome.applied()).hasSize(2);
+    }
+
+    @Test
+    void promotionsTiedAtOnePriorityAreAlwaysProcessedInIdOrder() {
+        // Concurrent requests lock tied promotions one after another; a fixed order is what keeps two
+        // requests from locking the same pair in opposite orders.
+        List<Promotion> tied = new ArrayList<>();
+        for (int i = 0; i < 6; i++) {
+            tied.add(activePromotion(
+                "Tied " + i, NO_CONSTRAINTS, new Discount(DiscountType.FIXED_AMOUNT, BigDecimal.ONE), 10,
+                CombinationMode.STACKABLE, 1000, 10));
+        }
+
+        PromotionApplicationOutcome outcome = service.execute(new ApplyPromotionsCommand(
+            Money.of(BigDecimal.valueOf(100), "EUR"), context(), productId, "URBAN"));
+
+        List<String> expected = tied.stream().map(promotion -> promotion.id().value()).sorted()
+            .map(Object::toString).toList();
+        assertThat(outcome.applied()).extracting(AppliedPromotionDetail::sourceId).containsExactlyElementsOf(expected);
     }
 }

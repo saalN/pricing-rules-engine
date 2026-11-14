@@ -150,6 +150,28 @@ class PromotionUsageConcurrencyEndToEndTest {
         }
     }
 
+    @Test
+    void promotionsTiedAtTheSamePriorityDoNotDeadlockEither() throws Exception {
+        String adminToken = token("admin@priceforge.com", Role.ADMIN);
+        String marketingToken = token("marketing@priceforge.com", Role.MARKETING);
+        UUID productId = createProduct(adminToken, "SKU-CONC-TIED", "CONC-TIED");
+        // Four STACKABLE promotions at one priority form a single group: the order they are locked
+        // in must not depend on the (changing) physical order of their rows.
+        List<UUID> tied = List.of(
+            createPromotion(marketingToken, "Tied 1", "CONC-TIED", 5, 60, 100),
+            createPromotion(marketingToken, "Tied 2", "CONC-TIED", 5, 60, 100),
+            createPromotion(marketingToken, "Tied 3", "CONC-TIED", 5, 60, 100),
+            createPromotion(marketingToken, "Tied 4", "CONC-TIED", 5, 60, 100));
+
+        List<PriceQuoteResponse> quotes = calculateConcurrently(adminToken, productId, 200, () -> UUID.randomUUID());
+
+        assertThat(quotes).hasSize(200);
+        for (UUID promotion : tied) {
+            assertThat(globalUsageCount(promotion)).as("usage of " + promotion).isEqualTo(60);
+            assertThat(sumOfPerUserUsage(promotion)).isEqualTo(60);
+        }
+    }
+
     private List<PriceQuoteResponse> calculateConcurrently(
             String token, UUID productId, int requests, Callable<UUID> userSupplier) throws Exception {
         ExecutorService executor = Executors.newFixedThreadPool(THREADS);

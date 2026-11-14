@@ -11,7 +11,7 @@ import org.springframework.core.annotation.Order;
  * Runs one Flyway instance per bounded-context schema — its own migration location and its own
  * {@code flyway_schema_history} table inside that schema — instead of Spring Boot's single
  * auto-configured instance. This is what the "one Postgres schema per bounded context" decision
- * in arquitectura-tecnica.md requires; {@code spring.flyway.enabled=false} turns off the default.
+ * requires; {@code spring.flyway.enabled=false} turns off the default.
  */
 @Configuration
 public class FlywayConfig {

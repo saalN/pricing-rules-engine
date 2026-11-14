@@ -14,7 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 /**
  * UC-14: newest calculations first, so the most recent activity is on the first page. Every role
- * has read access to Audit (see "Roles y Permisos" in funcionalidad.md); only exporting and
+ * has read access to Audit (per the functional spec's permissions table); only exporting and
  * replaying are restricted.
  */
 @Service

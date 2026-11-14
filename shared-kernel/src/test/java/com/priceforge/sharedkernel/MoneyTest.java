@@ -46,4 +46,22 @@ class MoneyTest {
         assertThat(Money.of(BigDecimal.ZERO, "EUR").isZero()).isTrue();
         assertThat(Money.of(BigDecimal.TEN, "EUR").isNegative()).isFalse();
     }
+
+    @Test
+    void roundsHalfUpToTheCurrencysDecimals() {
+        assertThat(Money.of(new BigDecimal("2.345"), "EUR").roundedToCurrency().amount()).isEqualTo(new BigDecimal("2.35"));
+        assertThat(Money.of(new BigDecimal("2.344"), "EUR").roundedToCurrency().amount()).isEqualTo(new BigDecimal("2.34"));
+        assertThat(Money.of(new BigDecimal("137.000000000000000000000000"), "EUR").roundedToCurrency().amount())
+            .isEqualTo(new BigDecimal("137.00"));
+    }
+
+    @Test
+    void padsAmountsThatHaveFewerDecimalsThanTheCurrency() {
+        assertThat(Money.of(BigDecimal.TEN, "EUR").roundedToCurrency().amount()).isEqualTo(new BigDecimal("10.00"));
+    }
+
+    @Test
+    void usesTheCurrencysOwnNumberOfDecimals() {
+        assertThat(Money.of(new BigDecimal("1234.5"), "JPY").roundedToCurrency().amount()).isEqualTo(new BigDecimal("1235"));
+    }
 }

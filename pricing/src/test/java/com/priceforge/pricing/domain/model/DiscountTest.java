@@ -44,4 +44,31 @@ class DiscountTest {
         assertThatThrownBy(() -> new Discount(DiscountType.PERCENTAGE, BigDecimal.valueOf(-10)))
             .isInstanceOf(InvalidDiscountException.class);
     }
+
+    @Test
+    void roundsAPercentageDiscountToTheCurrencysDecimals() {
+        Discount discount = new Discount(DiscountType.PERCENTAGE, BigDecimal.valueOf(15));
+
+        // 15% of 33.33 is 4.9995, which is not payable: it becomes 5.00.
+        Money amount = discount.amountFor(Money.of(new BigDecimal("33.33"), "EUR"));
+
+        assertThat(amount.amount()).isEqualTo(new BigDecimal("5.00"));
+    }
+
+    @Test
+    void neverReturnsMoreDecimalsThanTheCurrencyHas() {
+        Discount discount = new Discount(DiscountType.PERCENTAGE, new BigDecimal("12.3456"));
+
+        Money amount = discount.amountFor(Money.of(new BigDecimal("100.0000"), "EUR"));
+
+        assertThat(amount.amount().scale()).isEqualTo(2);
+        assertThat(amount.amount()).isEqualTo(new BigDecimal("12.35"));
+    }
+
+    @Test
+    void aFixedAmountIsAlsoExpressedInTheCurrencysDecimals() {
+        Discount discount = new Discount(DiscountType.FIXED_AMOUNT, new BigDecimal("5.0000"));
+
+        assertThat(discount.amountFor(Money.of(BigDecimal.TEN, "EUR")).amount()).isEqualTo(new BigDecimal("5.00"));
+    }
 }

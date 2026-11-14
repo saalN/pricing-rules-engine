@@ -35,6 +35,10 @@ public final class PriceCalculatorService {
             PricingContext context,
             boolean simulated) {
 
+        // The catalog stores base prices with more decimals than any currency pays in (NUMERIC(19,4));
+        // quoting starts from the amount actually payable so every figure in the quote shares a scale.
+        basePrice = basePrice.roundedToCurrency();
+
         List<PricingRule> applicable = activeRules.stream()
             .filter(rule -> rule.scope().appliesTo(productId, category))
             .filter(rule -> rule.condition().matches(context))
@@ -90,9 +94,8 @@ public final class PriceCalculatorService {
 
     private String describeRule(PricingRule rule) {
         Discount discount = rule.discount();
-        String discountText = discount.type() == DiscountType.PERCENTAGE
-            ? discount.value() + "%"
-            : discount.value().toString();
+        String value = discount.value().stripTrailingZeros().toPlainString();
+        String discountText = discount.type() == DiscountType.PERCENTAGE ? value + "%" : value;
         return rule.type() + " rule (" + discount.type() + " " + discountText + ")";
     }
 
