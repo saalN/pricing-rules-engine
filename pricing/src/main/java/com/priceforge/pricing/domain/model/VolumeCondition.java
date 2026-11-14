@@ -1,5 +1,6 @@
 package com.priceforge.pricing.domain.model;
 
+import com.priceforge.sharedkernel.PricingContext;
 public record VolumeCondition(int minimumQuantity) implements RuleCondition {
 
     public VolumeCondition {

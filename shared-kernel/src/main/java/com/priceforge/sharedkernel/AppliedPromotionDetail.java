@@ -1,6 +1,4 @@
-package com.priceforge.pricing.domain.model;
-
-import com.priceforge.sharedkernel.Money;
+package com.priceforge.sharedkernel;
 
 /**
  * Pricing's own generic view of "an external discount source applied on top of the pricing-rules

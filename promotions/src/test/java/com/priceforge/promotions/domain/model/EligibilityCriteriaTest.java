@@ -2,7 +2,7 @@ package com.priceforge.promotions.domain.model;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import com.priceforge.pricing.domain.model.CustomerSegment;
+import com.priceforge.sharedkernel.CustomerSegment;
 import com.priceforge.sharedkernel.Money;
 import java.math.BigDecimal;
 import org.junit.jupiter.api.Test;

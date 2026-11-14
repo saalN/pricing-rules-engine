@@ -1,6 +1,6 @@
 package com.priceforge.pricing.application.dto;
 
-import com.priceforge.pricing.domain.model.CustomerSegment;
+import com.priceforge.sharedkernel.CustomerSegment;
 import com.priceforge.sharedkernel.ProductId;
 import com.priceforge.sharedkernel.UserId;
 import java.time.Instant;

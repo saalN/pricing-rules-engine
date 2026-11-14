@@ -5,7 +5,7 @@ import com.priceforge.pricing.domain.model.Discount;
 import com.priceforge.pricing.domain.model.DiscountType;
 import com.priceforge.pricing.domain.model.ExcludedRuleDetail;
 import com.priceforge.pricing.domain.model.PriceQuote;
-import com.priceforge.pricing.domain.model.PricingContext;
+import com.priceforge.sharedkernel.PricingContext;
 import com.priceforge.pricing.domain.model.PricingRule;
 import com.priceforge.sharedkernel.ConflictResolution;
 import com.priceforge.sharedkernel.ConflictResolver;

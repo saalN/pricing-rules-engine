@@ -1,7 +1,7 @@
 package com.priceforge.pricing.application.port.out;
 
-import com.priceforge.pricing.domain.model.PricingContext;
-import com.priceforge.pricing.domain.model.PromotionApplicationOutcome;
+import com.priceforge.sharedkernel.PricingContext;
+import com.priceforge.sharedkernel.PromotionApplicationOutcome;
 import com.priceforge.sharedkernel.Money;
 import com.priceforge.sharedkernel.ProductId;
 

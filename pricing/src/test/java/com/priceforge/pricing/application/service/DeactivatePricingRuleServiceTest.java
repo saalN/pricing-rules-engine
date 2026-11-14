@@ -9,7 +9,7 @@ import com.priceforge.pricing.application.service.support.InMemoryPricingRuleRep
 import com.priceforge.pricing.application.service.support.RecordingEventPublisher;
 import com.priceforge.pricing.domain.exception.PricingRuleNotFoundException;
 import com.priceforge.sharedkernel.CombinationMode;
-import com.priceforge.pricing.domain.model.CustomerSegment;
+import com.priceforge.sharedkernel.CustomerSegment;
 import com.priceforge.pricing.domain.model.Discount;
 import com.priceforge.pricing.domain.model.DiscountType;
 import com.priceforge.pricing.domain.model.GlobalScope;

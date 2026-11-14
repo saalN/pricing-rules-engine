@@ -1,7 +1,7 @@
 package com.priceforge.pricing.application.service.support;
 
 import com.priceforge.pricing.domain.model.CategoryScope;
-import com.priceforge.pricing.domain.model.CustomerSegment;
+import com.priceforge.sharedkernel.CustomerSegment;
 import com.priceforge.pricing.domain.model.GeoCondition;
 import com.priceforge.pricing.domain.model.GlobalScope;
 import com.priceforge.pricing.domain.model.PricingRuleType;

@@ -1,5 +1,8 @@
 package com.priceforge.pricing.domain.model;
 
+import com.priceforge.sharedkernel.ExcludedPromotionDetail;
+import com.priceforge.sharedkernel.AppliedPromotionDetail;
+import com.priceforge.sharedkernel.PricingContext;
 import com.priceforge.sharedkernel.Money;
 import java.time.Instant;
 import java.util.List;

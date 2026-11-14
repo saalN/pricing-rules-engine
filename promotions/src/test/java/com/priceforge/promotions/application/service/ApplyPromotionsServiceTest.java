@@ -2,12 +2,13 @@ package com.priceforge.promotions.application.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import com.priceforge.pricing.domain.model.CustomerSegment;
-import com.priceforge.pricing.domain.model.ExcludedPromotionDetail;
-import com.priceforge.pricing.domain.model.PricingContext;
-import com.priceforge.pricing.domain.model.PromotionApplicationOutcome;
+import com.priceforge.sharedkernel.CustomerSegment;
+import com.priceforge.sharedkernel.ExcludedPromotionDetail;
+import com.priceforge.sharedkernel.PricingContext;
+import com.priceforge.sharedkernel.PromotionApplicationOutcome;
 import com.priceforge.promotions.application.service.support.InMemoryPromotionRepositoryPort;
 import com.priceforge.promotions.application.service.support.RecordingEventPublisher;
+import com.priceforge.promotions.application.dto.ApplyPromotionsCommand;
 import com.priceforge.promotions.domain.model.Discount;
 import com.priceforge.promotions.domain.model.DiscountType;
 import com.priceforge.promotions.domain.model.EligibilityCriteria;
@@ -25,11 +26,11 @@ import java.time.ZoneId;
 import java.time.temporal.ChronoUnit;
 import org.junit.jupiter.api.Test;
 
-class PromotionApplierServiceTest {
+class ApplyPromotionsServiceTest {
 
     private final InMemoryPromotionRepositoryPort repository = new InMemoryPromotionRepositoryPort();
     private final RecordingEventPublisher eventPublisher = new RecordingEventPublisher();
-    private final PromotionApplierService service = new PromotionApplierService(repository, eventPublisher);
+    private final ApplyPromotionsService service = new ApplyPromotionsService(repository, eventPublisher);
 
     private static final EligibilityCriteria NO_CONSTRAINTS = new EligibilityCriteria(null, null, null);
     private final ProductId productId = ProductId.newId();
@@ -57,8 +58,8 @@ class PromotionApplierServiceTest {
             "10% off", NO_CONSTRAINTS, new Discount(DiscountType.PERCENTAGE, BigDecimal.TEN), 10,
             CombinationMode.STACKABLE, 1000, 10);
 
-        PromotionApplicationOutcome outcome = service.apply(
-            Money.of(BigDecimal.valueOf(100), "EUR"), context(), productId, "URBAN");
+        PromotionApplicationOutcome outcome = service.execute(new ApplyPromotionsCommand(
+            Money.of(BigDecimal.valueOf(100), "EUR"), context(), productId, "URBAN"));
 
         assertThat(outcome.newPrice().amount()).isEqualByComparingTo(BigDecimal.valueOf(90));
         assertThat(outcome.applied()).hasSize(1);
@@ -71,8 +72,8 @@ class PromotionApplierServiceTest {
             "VIP only", new EligibilityCriteria(CustomerSegment.VIP, null, null),
             new Discount(DiscountType.PERCENTAGE, BigDecimal.TEN), 10, CombinationMode.STACKABLE, 1000, 10);
 
-        PromotionApplicationOutcome outcome = service.apply(
-            Money.of(BigDecimal.valueOf(100), "EUR"), context(), productId, "URBAN");
+        PromotionApplicationOutcome outcome = service.execute(new ApplyPromotionsCommand(
+            Money.of(BigDecimal.valueOf(100), "EUR"), context(), productId, "URBAN"));
 
         assertThat(outcome.applied()).isEmpty();
         assertThat(outcome.excluded()).isEmpty();
@@ -88,8 +89,8 @@ class PromotionApplierServiceTest {
             "Stackable loser", NO_CONSTRAINTS, new Discount(DiscountType.FIXED_AMOUNT, BigDecimal.TEN),
             5, CombinationMode.STACKABLE, 1000, 10);
 
-        PromotionApplicationOutcome outcome = service.apply(
-            Money.of(BigDecimal.valueOf(100), "EUR"), context(), productId, "URBAN");
+        PromotionApplicationOutcome outcome = service.execute(new ApplyPromotionsCommand(
+            Money.of(BigDecimal.valueOf(100), "EUR"), context(), productId, "URBAN"));
 
         assertThat(outcome.newPrice().amount()).isEqualByComparingTo(BigDecimal.valueOf(80));
         assertThat(outcome.applied()).hasSize(1);
@@ -106,8 +107,8 @@ class PromotionApplierServiceTest {
             CombinationMode.STACKABLE, 1000, 1);
         repository.recordUsageIfWithinLimits(promotion.id(), userId);
 
-        PromotionApplicationOutcome outcome = service.apply(
-            Money.of(BigDecimal.valueOf(100), "EUR"), context(), productId, "URBAN");
+        PromotionApplicationOutcome outcome = service.execute(new ApplyPromotionsCommand(
+            Money.of(BigDecimal.valueOf(100), "EUR"), context(), productId, "URBAN"));
 
         assertThat(outcome.applied()).isEmpty();
         assertThat(outcome.excluded()).hasSize(1);
@@ -122,8 +123,8 @@ class PromotionApplierServiceTest {
             "Last slot", NO_CONSTRAINTS, new Discount(DiscountType.FIXED_AMOUNT, BigDecimal.TEN), 10,
             CombinationMode.STACKABLE, 1, 10);
 
-        PromotionApplicationOutcome outcome = service.apply(
-            Money.of(BigDecimal.valueOf(100), "EUR"), context(), productId, "URBAN");
+        PromotionApplicationOutcome outcome = service.execute(new ApplyPromotionsCommand(
+            Money.of(BigDecimal.valueOf(100), "EUR"), context(), productId, "URBAN"));
 
         assertThat(outcome.applied()).hasSize(1);
         assertThat(eventPublisher.publishedEvents()).anyMatch(PromotionExhausted.class::isInstance);
@@ -136,8 +137,8 @@ class PromotionApplierServiceTest {
             "Huge discount", NO_CONSTRAINTS, new Discount(DiscountType.FIXED_AMOUNT, BigDecimal.valueOf(150)), 10,
             CombinationMode.STACKABLE, 1000, 10);
 
-        PromotionApplicationOutcome outcome = service.apply(
-            Money.of(BigDecimal.valueOf(100), "EUR"), context(), productId, "URBAN");
+        PromotionApplicationOutcome outcome = service.execute(new ApplyPromotionsCommand(
+            Money.of(BigDecimal.valueOf(100), "EUR"), context(), productId, "URBAN"));
 
         assertThat(outcome.priceFloorApplied()).isTrue();
         assertThat(outcome.newPrice().amount()).isEqualByComparingTo(BigDecimal.valueOf(0.01));
@@ -152,8 +153,8 @@ class PromotionApplierServiceTest {
             "10 off", NO_CONSTRAINTS, new Discount(DiscountType.FIXED_AMOUNT, BigDecimal.TEN), 10,
             CombinationMode.STACKABLE, 1000, 10);
 
-        PromotionApplicationOutcome outcome = service.apply(
-            Money.of(BigDecimal.valueOf(100), "EUR"), context(), productId, "URBAN");
+        PromotionApplicationOutcome outcome = service.execute(new ApplyPromotionsCommand(
+            Money.of(BigDecimal.valueOf(100), "EUR"), context(), productId, "URBAN"));
 
         assertThat(outcome.newPrice().amount()).isEqualByComparingTo(BigDecimal.valueOf(85));
         assertThat(outcome.applied()).hasSize(2);

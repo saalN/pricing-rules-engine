@@ -1,6 +1,5 @@
-package com.priceforge.pricing.domain.model;
+package com.priceforge.sharedkernel;
 
-import com.priceforge.sharedkernel.Money;
 import java.util.List;
 
 public record PromotionApplicationOutcome(

@@ -1,6 +1,6 @@
 package com.priceforge.promotions.infrastructure.out.postgres.entity;
 
-import com.priceforge.pricing.domain.model.CustomerSegment;
+import com.priceforge.sharedkernel.CustomerSegment;
 import com.priceforge.promotions.domain.model.DiscountType;
 import com.priceforge.promotions.domain.model.PromotionStatus;
 import com.priceforge.sharedkernel.CombinationMode;

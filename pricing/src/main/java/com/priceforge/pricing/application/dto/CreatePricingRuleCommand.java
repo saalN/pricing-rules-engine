@@ -1,7 +1,7 @@
 package com.priceforge.pricing.application.dto;
 
 import com.priceforge.sharedkernel.CombinationMode;
-import com.priceforge.pricing.domain.model.CustomerSegment;
+import com.priceforge.sharedkernel.CustomerSegment;
 import com.priceforge.pricing.domain.model.DiscountType;
 import com.priceforge.pricing.domain.model.PricingRuleType;
 import com.priceforge.sharedkernel.ProductId;

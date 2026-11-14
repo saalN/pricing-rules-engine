@@ -3,7 +3,7 @@ package com.priceforge.promotions.domain.model;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
-import com.priceforge.pricing.domain.model.CustomerSegment;
+import com.priceforge.sharedkernel.CustomerSegment;
 import com.priceforge.promotions.domain.exception.InvalidPromotionStateTransitionException;
 import com.priceforge.promotions.domain.exception.InvalidPromotionValidityWindowException;
 import com.priceforge.sharedkernel.CombinationMode;

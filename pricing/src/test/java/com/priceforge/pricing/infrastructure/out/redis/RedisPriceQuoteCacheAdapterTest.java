@@ -4,9 +4,9 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-import com.priceforge.pricing.domain.model.CustomerSegment;
+import com.priceforge.sharedkernel.CustomerSegment;
 import com.priceforge.pricing.domain.model.PriceQuote;
-import com.priceforge.pricing.domain.model.PricingContext;
+import com.priceforge.sharedkernel.PricingContext;
 import com.priceforge.sharedkernel.Money;
 import com.priceforge.sharedkernel.ProductId;
 import com.priceforge.sharedkernel.UserId;

@@ -12,7 +12,7 @@ import com.priceforge.pricing.application.port.in.CalculatePriceUseCase;
 import com.priceforge.pricing.application.port.in.SimulatePriceUseCase;
 import com.priceforge.pricing.domain.exception.CurrencyMismatchException;
 import com.priceforge.pricing.domain.exception.ProductNotFoundException;
-import com.priceforge.pricing.domain.model.CustomerSegment;
+import com.priceforge.sharedkernel.CustomerSegment;
 import com.priceforge.pricing.infrastructure.in.http.dto.CalculatePriceRequest;
 import com.priceforge.pricing.infrastructure.in.http.dto.SimulatePriceRequest;
 import com.priceforge.pricing.infrastructure.in.http.exception.PricingExceptionHandler;

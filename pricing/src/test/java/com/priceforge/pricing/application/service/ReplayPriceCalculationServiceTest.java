@@ -11,7 +11,7 @@ import com.priceforge.pricing.application.service.support.InMemoryPricingRuleRep
 import com.priceforge.pricing.application.service.support.RuleDefinitionMapper;
 import com.priceforge.pricing.domain.exception.CurrencyMismatchException;
 import com.priceforge.pricing.domain.exception.ProductNotFoundException;
-import com.priceforge.pricing.domain.model.CustomerSegment;
+import com.priceforge.sharedkernel.CustomerSegment;
 import com.priceforge.pricing.domain.model.Discount;
 import com.priceforge.pricing.domain.model.DiscountType;
 import com.priceforge.pricing.domain.model.PricingRule;

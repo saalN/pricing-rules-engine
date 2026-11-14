@@ -1,7 +1,7 @@
 package com.priceforge.pricing.infrastructure.out.postgres.entity;
 
 import com.priceforge.sharedkernel.CombinationMode;
-import com.priceforge.pricing.domain.model.CustomerSegment;
+import com.priceforge.sharedkernel.CustomerSegment;
 import com.priceforge.pricing.domain.model.DiscountType;
 import com.priceforge.pricing.domain.model.PricingRuleStatus;
 import com.priceforge.pricing.domain.model.PricingRuleType;

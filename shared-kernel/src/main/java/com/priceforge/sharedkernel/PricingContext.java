@@ -1,7 +1,5 @@
-package com.priceforge.pricing.domain.model;
+package com.priceforge.sharedkernel;
 
-import com.priceforge.sharedkernel.ProductId;
-import com.priceforge.sharedkernel.UserId;
 import java.time.Instant;
 import java.time.ZoneId;
 import java.util.Objects;

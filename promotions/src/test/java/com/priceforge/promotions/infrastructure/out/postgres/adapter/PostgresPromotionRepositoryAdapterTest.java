@@ -2,7 +2,7 @@ package com.priceforge.promotions.infrastructure.out.postgres.adapter;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import com.priceforge.pricing.domain.model.CustomerSegment;
+import com.priceforge.sharedkernel.CustomerSegment;
 import com.priceforge.promotions.domain.model.Discount;
 import com.priceforge.promotions.domain.model.DiscountType;
 import com.priceforge.promotions.domain.model.EligibilityCriteria;

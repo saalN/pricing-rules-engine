@@ -1,5 +1,6 @@
 package com.priceforge.pricing.domain.model;
 
+import com.priceforge.sharedkernel.PricingContext;
 public sealed interface RuleCondition
     permits TimeWindowCondition, SegmentCondition, VolumeCondition, GeoCondition {
 

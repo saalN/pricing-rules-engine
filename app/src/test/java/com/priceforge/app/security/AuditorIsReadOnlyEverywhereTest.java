@@ -70,9 +70,9 @@ class AuditorIsReadOnlyEverywhereTest {
     private static final Set<String> INTERNAL = Set.of(
         "RecordAuditEntryService",
         "ActivateAndExpirePromotionsService",
-        // A port implementation, not a use case: only reachable through CalculatePriceService,
-        // which the other test case proves denies the AUDITOR.
-        "PromotionApplierService");
+        // Only reached through Pricing's PromotionApplierPort from CalculatePriceService, which
+        // the other test case proves denies the AUDITOR.
+        "ApplyPromotionsService");
 
     @Autowired
     private ApplicationContext context;

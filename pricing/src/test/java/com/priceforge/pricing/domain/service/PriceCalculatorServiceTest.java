@@ -4,14 +4,14 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import com.priceforge.pricing.domain.model.CategoryScope;
 import com.priceforge.sharedkernel.CombinationMode;
-import com.priceforge.pricing.domain.model.CustomerSegment;
+import com.priceforge.sharedkernel.CustomerSegment;
 import com.priceforge.pricing.domain.model.Discount;
 import com.priceforge.pricing.domain.model.DiscountType;
 import com.priceforge.sharedkernel.ConflictExclusionReason;
 import com.priceforge.pricing.domain.model.GeoCondition;
 import com.priceforge.pricing.domain.model.GlobalScope;
 import com.priceforge.pricing.domain.model.PriceQuote;
-import com.priceforge.pricing.domain.model.PricingContext;
+import com.priceforge.sharedkernel.PricingContext;
 import com.priceforge.pricing.domain.model.PricingRule;
 import com.priceforge.pricing.domain.model.PricingRuleType;
 import com.priceforge.pricing.domain.model.ProductScope;
