@@ -46,31 +46,27 @@ use case it implements (`UC-06: Calculate final price`, …).
 ### Bounded contexts
 
 ```mermaid
-flowchart LR
-    subgraph Catalog
-        C["Products and base prices<br/>UC-01 to UC-04"]
-    end
-    subgraph Pricing
-        P["Rule engine and price calculation<br/>UC-05 to UC-09"]
-    end
-    subgraph Promotions
-        M["Campaigns and usage limits<br/>UC-10 to UC-13"]
-    end
-    subgraph Audit
-        A["Immutable trail, replay, export<br/>UC-14 and UC-15"]
-    end
-    P -->|reads product and base price| C
-    P -->|"PromotionApplierPort (extension point)"| M
-    M -->|worst-case discount query| P
-    M -->|cheapest base price| C
-    A -->|replay port| P
+flowchart TD
+    A["Audit<br/>Immutable trail, replay, export<br/>UC-14, UC-15"]
+    M["Promotions<br/>Campaigns and usage limits<br/>UC-10 to UC-13"]
+    P["Pricing<br/>Rule engine and price calculation<br/>UC-05 to UC-09"]
+    C["Catalog<br/>Products and base prices<br/>UC-01 to UC-04"]
+    A --> P
+    M --> P
+    M --> C
+    P --> C
+    P -. "runtime call via PromotionApplierPort" .-> M
 ```
+
+Solid arrows are code dependencies, always through the other context's published ports. The dotted
+arrow is a runtime call: Pricing defines `PromotionApplierPort` and Promotions implements it, so
+Pricing never depends on Promotions.
 
 ### Module dependencies
 
 Each context is its own Gradle module. A context may depend only on `shared-kernel` and on another
-context's *published ports* — never on its domain or infrastructure. The whole-repo boundary check
-is clean.
+context's *published ports* — never on its domain or infrastructure. The rule holds across the whole
+repository: no cross-context import goes beyond another context's ports and DTOs.
 
 ```mermaid
 flowchart TD
