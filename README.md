@@ -1,5 +1,7 @@
 # PriceForge — Pricing & Promotions Platform
 
+[![CI](https://github.com/saalN/pricing-rules-engine/actions/workflows/ci.yml/badge.svg)](https://github.com/saalN/pricing-rules-engine/actions/workflows/ci.yml)
+
 A pricing and promotions engine built with **Java 21 and Spring Boot 3**, as a modular monolith of
 four hexagonal bounded contexts: **Catalog**, **Pricing**, **Promotions** and **Audit**.
 
