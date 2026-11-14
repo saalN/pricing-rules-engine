@@ -33,6 +33,10 @@ priceforge:
       # Local-dev-only fallback — override with the JWT_SECRET env var anywhere this matters.
       secret: ${JWT_SECRET:priceforge-local-dev-only-hmac-secret-change-me-32b+}
       expiration-minutes: 60
+    # Demo utility that issues a token for any role without credentials: local development only.
+    # application-prod.yml turns it off, and ProductionSecurityGuard refuses to start otherwise.
+    demo-token-endpoint:
+      enabled: true
   outbox:
     # Only lists schemas that actually have an outbox_event table yet; extend as each context
     # (audit) adds its own.
