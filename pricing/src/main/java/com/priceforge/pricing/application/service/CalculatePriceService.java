@@ -26,6 +26,7 @@ import com.priceforge.sharedkernel.Money;
 import java.time.Instant;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -53,7 +54,13 @@ public class CalculatePriceService implements CalculatePriceUseCase {
         this.eventPublisher = eventPublisher;
     }
 
+    /**
+     * UC-06 is open to every authenticated caller (the external API client has no role of its
+     * own) except the AUDITOR: a calculation publishes a PriceCalculated event and can consume a
+     * promotion's usage limit, so it is a write, and the Auditor must never write anywhere.
+     */
     @Override
+    @PreAuthorize("!hasRole('AUDITOR')")
     public CalculatePriceResult execute(CalculatePriceCommand command) {
         GetProductResult product = getProductUseCase.execute(new GetProductQuery(command.productId()))
             .orElseThrow(() -> new ProductNotFoundException(command.productId()));
